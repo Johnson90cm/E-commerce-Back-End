@@ -9,20 +9,15 @@ router.get('/', (req, res) => {
   // be sure to include its associated Category and Tag data
   Product.findAll({
     attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
-    // order: [['created_at', 'DESC']],
     include: [
       {
         model: Category,
-        // attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+        attributes: ['category_name'],
         include: {
           model: Tag,
-          // attributes: ['username']
+          attributes: ['tag_name']
         }
       },
-      {
-        model: Category,
-        // attributes: ['username']
-      }
     ]
   })
     .then(dbProductData => res.json(dbProductData))
@@ -36,6 +31,34 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  Product.findOne({
+    attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+        model: Category,
+        attributes: ['category_name'],
+        include: {
+          model: Tag,
+          attributes: ['tag_name']
+        }
+      },
+    ]
+  })
+    .then(dbUserData => {
+      if (!dbUserData) {
+        res.status(404).json({ message: 'No user found with this id' });
+        return;
+      }
+      res.json(dbUserData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+
 });
 
 // create new product
@@ -114,6 +137,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  product.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(dbProductData => {
+      if (!dbProductData) {
+        res.status(404).json({ message: 'No product found with this id' });
+        return;
+      }
+      res.json(dbProductData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
