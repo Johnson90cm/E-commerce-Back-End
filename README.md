@@ -8,7 +8,7 @@
 ### App Demo
 
 
-![](https://watch.screencastify.com/v/3juALpm7u5HiZ3HO8ak0)
+Link: https://watch.screencastify.com/v/3juALpm7u5HiZ3HO8ak0
 
 
 ### Associations
